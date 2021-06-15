@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование{% endblock %}
+
+{% block body %}
+<script src="https://cdn.tiny.cloud/1/r55dmb7tylbap7uwxto0jlsvcn6z3uy29kieq6ujtxejkzyi/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+    selector: 'textarea#editor',
+    menubar: false
+  });
+</script>
+
+<div class="container mt-4 mb-4">
+  <div class="row justify-content-md-center">
+    <div class="col-md-12 col-lg-8">
+     <form method='POST'>
+       <input type="text" value="{{title}}" name="title"></input>
+        <textarea id="editor" name="editor">{{content}}</textarea>
+        <button type="submit" class="w-100 btn btn-lg btn-primary">Сохранить</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

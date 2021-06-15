@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Настройки{% endblock %}
+{% block body %}
+      <div class="container mt-5">
+        <form method="post">
+          <h1 class="h3 mb-3 fw-normal">Настройки</h1>
+          <table width="50%">
+            <tr>
+              <td>Скорость текста</td>
+              <td>
+                <input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}">
+              </td>
+            </tr>
+            <tr>
+              <td>Размер текста</td>
+              <td>
+                <input type="number" class="form-control" id="textSize" name="textSize" value="{{textSize}}">
+              </td>
+            </tr>
+            <tr>
+              <td>Цвет текста</td>
+              <td>
+                <input type="range" min="1" max="16" class="form-control" id="textColor" name="textColor" value="{{textColor}}">
+              </td>
+            </tr>
+            <tr>
+              <td>Цвет фона</td>
+              <td>
+                <input type="range" min="1" max="16" value="{{bgColor}}" class="form-control" id="bgColor" name="bgColor">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить изменения</button>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock %}
+{% block body %}
+      <div class="container mt-5">
+        <form method="post">
+          <h1 class="h3 mb-3 fw-normal">Профиль</h1>
+          <input type="text" class="form-control" id="name" name="name" value="{{name}}">
+          <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить изменения</button>
+        </form>
+      </div>
+{% endblock %}
