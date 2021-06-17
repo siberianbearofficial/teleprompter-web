@@ -11,3 +11,9 @@
   width: 100px;
   height: 100px;
 }
+
+.colorPickerDiv {
+  width: 15px;
+  height: 15px;
+  border: 1px #000000;
+}

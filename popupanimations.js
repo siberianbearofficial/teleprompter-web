@@ -1,113 +1,3 @@
-{% extends 'base.html' %}
-
-{% block title %}Настройки{% endblock %}
-{% block body %}
-      <div class="container mt-5">
-        <form method="post">
-          <h1 class="h3 mb-3 fw-normal">Настройки</h1>
-          <table width="50%">
-            <tr>
-              <td colspan="2">Скорость текста</td>
-              <td>
-                <input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}">
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">Размер текста</td>
-              <td>
-                <input type="number" class="form-control" id="textSize" name="textSize" value="{{textSize}}">
-              </td>
-            </tr>
-            <tr>
-              <td>Цвет текста</td>
-              <td>
-                <input type="range" min="1" max="24" class="form-control" id="textColor" name="textColor" value="{{textColor}}" onchange="changeTextColor()">
-              </td>
-              <td>
-                <div id="textColorDiv" class="colorPickerDiv"></div>
-              </td>
-            </tr>
-            <tr>
-              <td>Цвет фона</td>
-              <td>
-                <input type="range" min="1" max="24" value="{{bgColor}}" class="form-control" id="bgColor" name="bgColor">
-              </td>
-              <td>
-                <div id="bgColorDiv" class="colorPickerDiv"></div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить изменения</button>
-              </td>
-            </tr>
-          </table>
-        </form>
-
-        <!-- Popup blocks -->
-        <h1>Всплывающие окна.</h1>
- 
-	      <h2>Анимация CSS3 fadeIn и fadeOut.</h2>
-        <div class="flex">
-          <button type="button" class="btn btn-default" data-modal="modal_1">Показать popup 1</button>
-          <button type="button" class="btn btn-success" data-modal="modal_2">Показать popup 2</button>
-        </div>
-      
-        <div class="overlay" data-close=""></div>
-      
-        <div id="modal_1" class="dlg-modal dlg-modal-fade">
-          <span class="closer" data-close=""></span>
-          <h3>Всплывающее окно 1</h3>
-        </div>
-        <div id="modal_2" class="dlg-modal dlg-modal-fade">
-          <span class="closer" data-close=""></span>
-          <h3>Всплывающее окно 2</h3>
-        </div>
-      </div>
-<!-- Scripts -->
-<script type="text/javascript">
-textColorDiv = document.getElementById("textColorDiv");
-bgColorDiv = document.getElementById("bgColorDiv");
-textColor = document.getElementById("textColor");
-bgColor = document.getElementById("bgColor");
-console.log(textColorDiv);
-console.log(bgColorDiv);
-
-colors = [
-  "#000000",
-  "#FFFFFF",
-  "#9C27B0",
-  "#673AB7",
-  "#3F51B5",
-  "#2196F3",
-  "#03A9F4",
-  "#00BCD4",
-  "#009688",
-  "#4CAF50",
-  "#8BC34A",
-  "#CDDC39",
-  "#FFEB3B",
-  "#FFC107",
-  "#FF9800",
-  "#FF5722",
-  "#F44336",
-  "#E91E63",
-  "#66380F",
-  "#BB671C",
-  "#000036",
-  "#F0C6A1",
-  "#D8BDB0",
-  "#D0D3B5",
-]
-
-var changeTextColor = function() {
-  textColorDiv.style.background = colors[textColor.value];
-}
-
-
-</script>
-<script type="text/javascript">var typeAnimate = 'fade';</script>
-<script>
 ;(function() {
 	'use strict';
  
@@ -117,7 +7,7 @@ var changeTextColor = function() {
 // их отличительной особенность является наличие атрибута '[data-modal]'
 const mOpen = document.querySelectorAll('[data-modal]');
 // если нет элементов управления всплывающими окнами, прекращаем работу скрипта
-if (mOpen.length != 0) {
+if (mOpen.length == 0) return;
  
 	  // подложка под всплывающее окно
 const overlay = document.querySelector('.overlay'),
@@ -191,6 +81,3 @@ function modalClose(event) {
 		mStatus = false;
 	}
 }
-}
-</script>
-{% endblock %}

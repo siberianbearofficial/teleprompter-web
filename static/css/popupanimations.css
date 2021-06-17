@@ -1,0 +1,64 @@
+/* reset */
+html, body, div, span, h1, h2, h3, p, ul, li { margin: 0; padding: 0; border: 0; vertical-align: baseline; }
+*, :after, :before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+ol, ul { list-style: none; display: block; }
+a, button, div, input, select, textarea, :focus, :active { outline: none; }
+
+/* grid */
+html, body, .wrap { height: 100%; line-height: 1; }
+.wrap { width: 100%; max-width: 1024px; position: relative; margin: 0 auto; padding-top: 50px; }
+.flex { display: -webkit-box; display: -ms-flexbox; display: flex; }
+
+/* typography */
+body { font-size: 16px; line-height: 24px; font-family: 'Roboto', sans-serif; color: #333; }
+h1 { font-weight: normal; font-size: 24px; line-height: 30px; margin-bottom: 24px; }
+h2 { font-weight: normal; font-size: 20px; line-height: 30px; color: #058cd0; margin: -5px 0 27px; padding-top: 12px; border-bottom: dashed 1px; }
+h3 { font-weight: normal; font-size: 22px; line-height: 24px; margin-bottom: 12px; }
+p { line-height: 20px; color: #656565; text-align: justify; }
+
+/* transition */
+.btn, .closer, .overlay { -webkit-transition: all 0.2s; transition: all 0.2s; }
+
+/* buttons */
+.btn { height: 48px; display:inline-block; font-weight: 500; font-size: 14px; line-height: 46px; font-family: 'Roboto', sans-serif; padding: 0 32px; text-decoration:none; text-transform:uppercase; text-align:center; border-radius: 24px; border:0; background: transparent; cursor: pointer; }
+.btn + .btn { margin-left: 24px; }
+.btn-default { color: #058cd0; border: solid 2px #058cd0; opacity: 1; }
+.btn-success { color: #5cb85c; border: solid 2px #5cb85c; opacity: 1; }
+.btn-default:hover, .btn-success:hover { opacity: 0.77; }
+
+/*--- CONTENT ---*/
+
+.overlay { opacity: 0; visibility: hidden; position:fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 5; background: rgba(0,0,0,0.87); }
+.dlg-modal { width: 100%; max-width: 570px; height: 300px; opacity: 0; visibility: hidden; text-align: center; position: fixed; left: 50%; z-index: 10; padding: 35px 36px; background: #fff; border-radius: 10px; -webkit-box-shadow: 0 0 20px rgba(0,0,0,0.85); box-shadow: 0 0 20px rgba(0,0,0,0.85); }
+.dlg-modal-fade { top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); }
+.dlg-modal-slide { top: -20px; -webkit-transform: translate(-50%, -100%); transform: translate(-50%, -100%); visibility: visible; opacity: 1; }
+
+.closer { width: 40px; height: 40px; display: block; position: absolute; right: 10px; top: 10px; background: url('../images/cross.png') no-repeat; cursor: pointer; }
+.closer:hover { -webkit-transform: rotate(90deg); transform: rotate(90deg); }
+
+/* animation */
+.fadeIn, .fadeOut, .slideInDown, .slideOutUp { -webkit-animation-duration: 0.4s; animation-duration: 0.4s; -webkit-animation-timing-function: linear; animation-timing-function: linear; }
+
+@keyframes fadeIn { 
+	from { opacity: 0; visibility: hidden; }
+	to { opacity:1; visibility: visible; }
+}
+.fadeIn { -webkit-animation-name: fadeIn; animation-name: fadeIn; opacity: 1; visibility: visible; }
+
+@keyframes fadeOut { 
+	from { opacity: 1; visibility: visible; }
+	to { opacity:0; visibility: hidden; }
+}
+.fadeOut { -webkit-animation-name: fadeOut; animation-name: fadeOut; opacity: 0; visibility: hidden; }
+
+@keyframes slideInDown { 
+	from { top: -20px; -webkit-transform: translate(-50%, -100%); transform: translate(-50%, -100%); }
+	to { top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); }
+}
+.slideInDown { -webkit-animation-name: slideInDown; animation-name: slideInDown; top: 50%; transform: translate(-50%, -50%); }
+
+@keyframes slideOutUp { 
+	from { top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); }
+	to { top: -20px; -webkit-transform: translate(-50%, -100%); transform: translate(-50%, -100%); }
+}
+.slideOutUp { -webkit-animation-name: slideOutUp; animation-name: slideOutUp; }
