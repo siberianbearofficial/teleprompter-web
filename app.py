@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 import pyrebase
 import os
-import storageListHelper as slh
 
 app = Flask(
 	__name__,
@@ -43,10 +42,6 @@ def index():
     name = db.child("users").child(userId).child('name').get().val()
     name = 'Здравствуй, ' + name + '!'
 
-    # Выгружаем список файлов
-    storagePath = userId + '/files'
-    slh.list_all_files(config['storageBucket'], storagePath, config['apiKey'])
-
     return render_template('index.html', name=name)
   else:
     return render_template('index_guest.html')
@@ -55,6 +50,15 @@ def index():
 @app.route('/about')
 def about():
   return 'About page'
+
+
+@app.route('/files-list')
+def filesList():
+  if current_user != dict() and userId != '':
+    return render_template('test.html', user_id=userId)
+  else:
+    return redirect('/')
+
 
 @app.route('/edit/<string:localId>/<string:fileName>', methods=['POST', 'GET'])
 def edit(localId, fileName):
@@ -68,7 +72,7 @@ def edit(localId, fileName):
       fullFileName = localId + '/files/' + fileName
       storage.child(fullFileName).put('static/files/' + fileName)
       os.remove('static/files/' + fileName)
-      flash('Изменения сохранены!')
+      # flash('Изменения сохранены!')
       return render_template('edit.html', content=editor, title=fileName[:fileName.rfind('.')])
     else:
       if localId == userId:

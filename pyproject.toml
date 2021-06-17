@@ -8,6 +8,7 @@ authors = ["siberianbear <<>>"]
 python = "^3.8"
 flask = "^2.0.1"
 pyrebase = "^3.0.27"
+oauth2client = "3.0.0"
 
 [tool.poetry.dev-dependencies]
 

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Список документов{% endblock %}
+
+{% block body %}
+<div class="container m-10">
+  <div class="list-group">
+    <div id="filesContainer"></div>
+  </div>
+</div>
+<div id="fileFragment" class="card m-1 p-2">
+    <div class="card-title font-weight-bold">
+      <a href="#" class="fileName"></a>
+    </div>
+    <div class="card-subtitle">
+      <div class="fileDate"></div>
+    </div>
+</div>
+<!-- Scripts -->
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-storage.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyA3ZYaV-3uJmusX3-nfV71CT5pbjyLqbtY",
+    authDomain: "teleprompterandroidjava.firebaseapp.com",
+    databaseURL: "https://teleprompterandroidjava-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "teleprompterandroidjava",
+    storageBucket: "teleprompterandroidjava.appspot.com",
+    messagingSenderId: "300471537841",
+    appId: "1:300471537841:web:de99d6f9e4316faeddd290",
+    measurementId: "G-Y3RVRFQ01W"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+<script type="text/javascript">
+  var filesContainer = document.getElementById("filesContainer");
+
+  var defaultStorage = firebase.storage();
+  defaultStorage.ref().child('{{user_id}}/files').listAll()
+  .then((res) => {
+    let itemsList = [];
+    res.items.forEach((itemRef) => {
+      var item = new Map();
+      itemRef.getMetadata()
+        .then((metadata) => {
+          console.log(metadata);
+          fileName = itemRef.name;
+          item.set("name", fileName);
+          item.set("path", metadata.fullPath);
+          item.set("date", metadata.timeCreated);
+          console.log(metadata.timeCreated);
+          item.set("customMetadata", metadata.customMetadata);
+          itemsList.push(item);
+
+          var fileFragment = document.getElementById("fileFragment").cloneNode(true);
+          fileFragment.id = fileName;
+          var link = fileFragment.getElementsByClassName("fileName")[0];
+          var date = fileFragment.getElementsByClassName("fileDate")[0];
+          link.innerHTML = fileName;
+          link.href = "/edit/{{user_id}}/" + fileName;
+          date.innerHTML = new Date(metadata.timeCreated).toLocaleDateString();
+          console.log(fileFragment);
+          filesContainer.appendChild(fileFragment);
+        })
+        .catch((error) => {
+          console.log("Error in getting metadata");
+        });
+    });
+    // var xhr = new XMLHttpRequest();
+    // var body = 'itemsNamesList=' + encodeURIComponent(itemsNamesList);
+    // xhr.open("POST", '/submit', true);
+    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    // xhr.send(body);
+  }).catch((error) => {
+      alert('Error');
+  });
+</script>
+{% endblock %}

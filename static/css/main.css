@@ -1,1 +1,8 @@
 /*Here we can add some css styles for our web pages*/
+#fileFragment {
+  display: none;
+}
+
+.fileName {
+  text-decoration: none;
+}
