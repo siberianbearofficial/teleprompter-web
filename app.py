@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 import pyrebase
 import os
+from avatar import crop, downloadAvatar, uploadAvatar
 
 app = Flask(
 	__name__,
@@ -19,8 +20,7 @@ config = {
   'measurementId': "G-Y3RVRFQ01W"
 }
 
-userId = ''
-current_user = dict()
+app.config['SECRET_KEY'] = config['apiKey']
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
@@ -28,8 +28,37 @@ db = firebase.database()
 storage = firebase.storage()
 
 
-@app.route('/')
+userId = ''
+current_user = dict()
+
+
+def sign_out():
+  # Удаляем предыдущий аватар, если он еще сохранен
+  try:
+    os.remove('static/images/avatar.jpeg')
+  except:
+    print('Can\'t remove avatar')
+  global userId
+  global current_user
+  userId = ''
+  current_user = dict()
+
+
+sign_out()
+
+
 @app.route('/home')
+def home():
+  return redirect('/')
+
+
+@app.route('/sign-out')
+def signout():
+  sign_out()
+  return redirect('/')
+
+
+@app.route('/')
 def index():
   name = ''
   global current_user
@@ -40,11 +69,12 @@ def index():
   if userId != '':
     print('Trying to get name...')
     name = db.child("users").child(userId).child('name').get().val()
-    name = 'Здравствуй, ' + name + '!'
-
-    return render_template('index.html', name=name)
+    if os.path.exists('static/images/avatar.jpeg'):
+      return render_template('index.html', name='Здравствуй, {0}!'.format(name), downloaded=True)
+    else:
+      return render_template('index.html', name='Здравствуй, {0}!'.format(name), downloaded=False)
   else:
-    return render_template('index_guest.html')
+    return redirect('/login')
 
 
 @app.route('/about')
@@ -56,6 +86,30 @@ def about():
 def filesList():
   if current_user != dict() and userId != '':
     return render_template('test.html', user_id=userId)
+  else:
+    return redirect('/')
+
+
+@app.route('/create', methods=["GET", "POST"])
+def create():
+  if current_user != dict() and userId != '':
+    if request.method == 'POST':
+      editor = request.form['editor']
+      if request.form['title'] != '':
+        fileName = request.form['title'] + '.html'
+      else:
+        return render_template('edit.html', content=editor, title="", notitle=True)
+      file = open('static/files/' + fileName, 'w')
+      file.write(editor)
+      file.close()
+      fullFileName = userId + '/files/' + fileName
+      storage.child(fullFileName).put('static/files/' + fileName)
+      os.remove('static/files/' + fileName)
+      flash('Изменения сохранены!')
+      return render_template('edit.html', content=editor, title=fileName[:fileName.rfind('.')], notitle=False)
+    else:
+      # Для тестов: zVElAdFPEiUd3FwL2Y08snmk2wZ2/TestForServer.html
+      return render_template('edit.html', content="", title="", notitle=True)
   else:
     return redirect('/')
 
@@ -72,8 +126,8 @@ def edit(localId, fileName):
       fullFileName = localId + '/files/' + fileName
       storage.child(fullFileName).put('static/files/' + fileName)
       os.remove('static/files/' + fileName)
-      # flash('Изменения сохранены!')
-      return render_template('edit.html', content=editor, title=fileName[:fileName.rfind('.')])
+      flash('Изменения сохранены!')
+      return render_template('edit.html', content=editor, title=fileName[:fileName.rfind('.')], notitle=False)
     else:
       if localId == userId:
         # Если id пользователя (который вошел на сайт под своим логином и паролем) совпадает с id пользователя, загрузившего документ (то есть, пользователь хочет просмотреть свой документ, а не чужой), то все нормально, можно открывать страницу редактирования
@@ -87,7 +141,7 @@ def edit(localId, fileName):
         content = file.read()
         file.close()
         os.remove('static/files/' + fileName)
-        return render_template('edit.html', content=content, title=fileName[:fileName.rfind('.')])
+        return render_template('edit.html', content=content, title=fileName[:fileName.rfind('.')], notitle=False)
       else:
         return render_template('exception.html')
   else:
@@ -136,45 +190,62 @@ def settings():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-  if request.method == 'POST':
-    email = request.form['email']
-    password = request.form['password']
-    print(email, password)
-    try:
-      global current_user
-      current_user = auth.sign_in_with_email_and_password(email, password)
-      global userId
-      userId = current_user['localId']
-      print(userId)
-      return redirect('/')
-    except:
-      return render_template('exception.html')
+  global current_user
+  global userId
+  if current_user == dict() or userId == '':
+    if request.method == 'POST':
+      email = request.form['email']
+      password = request.form['password']
+      print(email, password)
+      try:
+        current_user = auth.sign_in_with_email_and_password(email, password)
+        userId = current_user['localId']
+        downloadAvatar(storage, current_user)
+        return redirect('/')
+      except:
+        return render_template('exception.html')
+    else:
+      return render_template('login.html')
   else:
-    return render_template('login.html')
+    sign_out()
+    return redirect('/login')
 
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
-  if request.method == 'POST':
-    email = request.form['email']
-    password = request.form['password']
-    name = request.form['name']
-    print(email, password, name)
-    try:
-      global current_user
-      current_user = auth.create_user_with_email_and_password(email, password)
-      global userId
-      userId = current_user['localId']
-      print(userId)
+  global current_user
+  global userId
+  if current_user == dict() or userId == '':
+    if request.method == 'POST':
+      email = request.form['email']
+      password = request.form['password']
+      name = request.form['name']
+      print(email, password, name)
+      try:
+        current_user = auth.create_user_with_email_and_password(email, password)
+        userId = current_user['localId']
+        print(userId)
 
-      # Сохраняем имя
-      db.child('users/'+userId+'/name').set(name)
-      db.child('users/'+userId+'/email').set(email)
-      return redirect('/')
-    except:
-      return render_template('exception.html')
+        # Сохраняем имя
+        db.child('users/'+userId+'/name').set(name)
+        db.child('users/'+userId+'/email').set(email)
+        return redirect('/')
+      except:
+        return render_template('exception.html')
+    else:
+      return render_template('signup.html')
   else:
-    return render_template('signup.html')
+    sign_out()
+    return redirect('/signup')
+
+
+@app.route('/save-avatar', methods=['POST'])
+def saveavatar():
+  avatarFile = request.files['avatarFile']
+  avatarFile.save('static/images/avatar.jpeg')
+  crop()
+  uploadAvatar(storage, current_user)
+  return redirect('/')
 
 
 @app.route('/profile', methods=['POST', 'GET'])
@@ -194,7 +265,10 @@ def profile():
       # Получение настроек
       dbPath = 'users/' + userId + '/name'
       name = db.child(dbPath).get().val()
-      return render_template('profile.html', name=name)
+      if os.path.exists('static/images/avatar.jpeg'):
+        return render_template('profile.html', name=name, downloaded=True)
+      else:
+        return render_template('profile.html', name=name, downloaded=False)
   else:
     return redirect('/')
 

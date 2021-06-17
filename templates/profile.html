@@ -3,6 +3,11 @@
 {% block title %}Профиль{% endblock %}
 {% block body %}
       <div class="container mt-5">
+        <img src="{% if downloaded %}{{url_for('static', filename='images/avatar.jpeg')}}{% else %}{{url_for('static', filename='images/avatar-guest.jpeg')}}{% endif %}" class="avatar"></img>
+        <form method="post" action="/save-avatar" enctype="multipart/form-data">
+          <input type="file" class="form-control" id="avatarFile" name="avatarFile">
+          <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить аватар</button>
+        </form>
         <form method="post">
           <h1 class="h3 mb-3 fw-normal">Профиль</h1>
           <input type="text" class="form-control" id="name" name="name" value="{{name}}">
