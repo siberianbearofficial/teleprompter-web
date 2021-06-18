@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect, flash
 import pyrebase
 import os
 from avatar import crop, downloadAvatar, uploadAvatar
+from speed import toPercentValue, toSpeedValue
 
 app = Flask(
 	__name__,
@@ -58,6 +59,11 @@ def signout():
   return redirect('/')
 
 
+@app.route('/for-html-tests')
+def forhtmltests():
+  return render_template('index-guest.html')
+
+
 @app.route('/')
 def index():
   name = ''
@@ -70,11 +76,11 @@ def index():
     print('Trying to get name...')
     name = db.child("users").child(userId).child('name').get().val()
     if os.path.exists('static/images/avatar.jpeg'):
-      return render_template('index.html', name='Здравствуй, {0}!'.format(name), downloaded=True)
+      return render_template('index.html', name=name, downloaded=True, user_id=userId)
     else:
-      return render_template('index.html', name='Здравствуй, {0}!'.format(name), downloaded=False)
+      return render_template('index.html', name=name, downloaded=False, user_id=userId)
   else:
-    return redirect('/login')
+    return render_template('index-guest.html')
 
 
 @app.route('/about')
@@ -156,13 +162,14 @@ def settings():
       textSize = request.form['textSize']
       bgColor = request.form['bgColor']
       speed = request.form['speed']
+      speed = str(toSpeedValue(int(speed)))
 
       try:
         dbPath = 'users/' + userId + '/settings/'
         settingsDict = {
-          "textColor": textColor,
-          "textSize": textSize,
-          "bgColor": bgColor,
+          "textColor": str(textColor),
+          "textSize": str(textSize),
+          "bgColor": str(bgColor),
           "speed": speed
         }
         db.child(dbPath).set(settingsDict)
@@ -173,16 +180,18 @@ def settings():
         return render_template('exception.html') 
     else:
       # Получение настроек
-      textColor = 0
-      textSize = 16
-      bgColor = 0
-      speed = 60
+      textColor = '0'
+      textSize = '16'
+      bgColor = '1'
+      speed = '1'
 
       dbPath = 'users/' + userId + '/settings/'
       textSize = db.child(dbPath + 'textSize').get(current_user['idToken']).val()
       textColor = db.child(dbPath + 'textColor').get(current_user['idToken']).val()
       speed = db.child(dbPath + 'speed').get(current_user['idToken']).val()
       bgColor = db.child(dbPath + 'bgColor').get(current_user['idToken']).val()
+
+      speed = str(toPercentValue(int(speed)))
       
       return render_template('settings.html', bgColor=bgColor, textColor=textColor, textSize=textSize, speed=speed)
   else:

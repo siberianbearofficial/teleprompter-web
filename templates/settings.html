@@ -1,69 +1,107 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %}Настройки{% endblock %} {% block body %}
+<form method="post">
+<!-- Speed: -->
+<img class="start-speed-circle" src="{{url_for('static', filename='images/start-speed-circle.png')}}">
+<input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}">
+<!-- Size: -->
+<input type="number" class="form-control" id="textSize" name="textSize" value="{{textSize}}">
+<!-- Text color: -->
+<input type="range" min="1" max="24" class="form-control" id="textColor" name="textColor" value="{{textColor}}">
+<div id="textColorDiv" class="colorPickerDiv" data-modal="modal_1" onclick="openTxt()"></div>
+<!-- Background color: -->
+<input type="range" min="1" max="24" value="{{bgColor}}" class="form-control" id="bgColor" name="bgColor">
+<div id="bgColorDiv" class="colorPickerDiv" data-modal="modal_1" onclick="openBg()"></div>
+<!-- Submit button: -->
+<button type="submit">Сохранить</button>
+</form>
 
-{% block title %}Настройки{% endblock %}
-{% block body %}
-      <div class="container mt-5">
-        <form method="post">
-          <h1 class="h3 mb-3 fw-normal">Настройки</h1>
-          <table width="50%">
-            <tr>
-              <td colspan="2">Скорость текста</td>
-              <td>
-                <input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}">
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">Размер текста</td>
-              <td>
-                <input type="number" class="form-control" id="textSize" name="textSize" value="{{textSize}}">
-              </td>
-            </tr>
-            <tr>
-              <td>Цвет текста</td>
-              <td>
-                <input type="range" min="1" max="24" class="form-control" id="textColor" name="textColor" value="{{textColor}}" onchange="changeTextColor()">
-              </td>
-              <td>
-                <div id="textColorDiv" class="colorPickerDiv"></div>
-              </td>
-            </tr>
-            <tr>
-              <td>Цвет фона</td>
-              <td>
-                <input type="range" min="1" max="24" value="{{bgColor}}" class="form-control" id="bgColor" name="bgColor">
-              </td>
-              <td>
-                <div id="bgColorDiv" class="colorPickerDiv"></div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить изменения</button>
-              </td>
-            </tr>
-          </table>
-        </form>
+<!-- Popup blocks -->
+<div class="overlay" data-close=""></div>
 
-        <!-- Popup blocks -->
-        <h1>Всплывающие окна.</h1>
- 
-	      <h2>Анимация CSS3 fadeIn и fadeOut.</h2>
-        <div class="flex">
-          <button type="button" class="btn btn-default" data-modal="modal_1">Показать popup 1</button>
-          <button type="button" class="btn btn-success" data-modal="modal_2">Показать popup 2</button>
-        </div>
-      
-        <div class="overlay" data-close=""></div>
-      
-        <div id="modal_1" class="dlg-modal dlg-modal-fade">
-          <span class="closer" data-close=""></span>
-          <h3>Всплывающее окно 1</h3>
-        </div>
-        <div id="modal_2" class="dlg-modal dlg-modal-fade">
-          <span class="closer" data-close=""></span>
-          <h3>Всплывающее окно 2</h3>
-        </div>
-      </div>
+<div id="modal_1" class="dlg-modal dlg-modal-fade">
+  <span class="closer" data-close="" id="closer_color_picker"></span>
+  <h3>Выберите цвет</h3>
+  <table class="colorPickerTable">
+    <tr>
+      <td>
+      <div id="colorPickerDivTd0" onclick="changeTextColor(0)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd1" onclick="changeTextColor(1)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd2" onclick="changeTextColor(2)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd3" onclick="changeTextColor(3)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd4" onclick="changeTextColor(4)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd5" onclick="changeTextColor(5)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd6" onclick="changeTextColor(6)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd7" onclick="changeTextColor(7)" class="colorPickerDiv"></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <div id="colorPickerDivTd8" onclick="changeTextColor(8)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd9" onclick="changeTextColor(9)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd10" onclick="changeTextColor(10)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd11" onclick="changeTextColor(11)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd12" onclick="changeTextColor(12)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd13" onclick="changeTextColor(13)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd14" onclick="changeTextColor(14)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd15" onclick="changeTextColor(15)" class="colorPickerDiv"></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <div id="colorPickerDivTd16" onclick="changeTextColor(16)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd17" onclick="changeTextColor(17)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd18" onclick="changeTextColor(18)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd19" onclick="changeTextColor(19)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd20" onclick="changeTextColor(20)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd21" onclick="changeTextColor(21)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd22" onclick="changeTextColor(22)" class="colorPickerDiv"></div>
+      </td>
+      <td>
+      <div id="colorPickerDivTd23" onclick="changeTextColor(23)" class="colorPickerDiv"></div>
+      </td>
+    </tr>
+</div>
+
 <!-- Scripts -->
 <script type="text/javascript">
 textColorDiv = document.getElementById("textColorDiv");
@@ -73,37 +111,57 @@ bgColor = document.getElementById("bgColor");
 console.log(textColorDiv);
 console.log(bgColorDiv);
 
-colors = [
-  "#000000",
-  "#FFFFFF",
-  "#9C27B0",
-  "#673AB7",
-  "#3F51B5",
-  "#2196F3",
-  "#03A9F4",
-  "#00BCD4",
-  "#009688",
-  "#4CAF50",
-  "#8BC34A",
-  "#CDDC39",
-  "#FFEB3B",
-  "#FFC107",
-  "#FF9800",
-  "#FF5722",
-  "#F44336",
-  "#E91E63",
-  "#66380F",
-  "#BB671C",
-  "#000036",
-  "#F0C6A1",
-  "#D8BDB0",
-  "#D0D3B5",
-]
+let colorDivForChange;
+let colorForValue;
 
-var changeTextColor = function() {
-  textColorDiv.style.background = colors[textColor.value];
+function openBg() {
+  open(1);
 }
 
+function openTxt() {
+  open(0);
+}
+
+function open(i) {
+  if (i == 0) {
+    colorForValue = document.getElementById("textColor");
+    colorDivForChange = document.getElementById("textColorDiv");
+  } else {
+    colorForValue = document.getElementById("bgColor");
+    colorDivForChange = document.getElementById("bgColorDiv");
+  }
+  console.log(colorForValue);
+  console.log(colorDivForChange);
+}
+
+colors = [
+  "#000000", "#FFFFFF", "#9C27B0",
+  "#673AB7", "#3F51B5", "#2196F3",
+  "#03A9F4", "#00BCD4", "#009688",
+  "#4CAF50", "#8BC34A", "#CDDC39",
+  "#FFEB3B", "#FFC107", "#FF9800",
+  "#FF5722", "#F44336", "#E91E63",
+  "#66380F", "#BB671C", "#000036",
+  "#F0C6A1", "#D8BDB0", "#D0D3B5"
+]
+
+// var changeTextColor = function() {
+//   textColorDiv.style.background = colors[textColor.value];
+// }
+
+function changeTextColor(colorId) {
+  colorDivForChange.style.background = colors[colorId];
+  colorForValue.value = colorId;
+}
+
+for (let i = 0; i < 24; i++) {
+  let elem = document.getElementById("colorPickerDivTd"+i);
+  elem.style.background = colors[i];
+  elem.dataset.close="";
+}
+
+textColorDiv.style.background = colors[{{textColor}}]
+bgColorDiv.style.background = colors[{{bgColor}}]
 
 </script>
 <script type="text/javascript">var typeAnimate = 'fade';</script>
@@ -192,5 +250,8 @@ function modalClose(event) {
 	}
 }
 }
+</script>
+<script type="text/javascript">
+  document.getElementsByClassName("settings-button-img")[0].src = "{{url_for('static', filename='images/settings-button-active.png')}}"
 </script>
 {% endblock %}

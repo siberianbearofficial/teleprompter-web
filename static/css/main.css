@@ -1,4 +1,5 @@
 /*Here we can add some css styles for our web pages*/
+
 #fileFragment {
   display: none;
 }
@@ -8,12 +9,196 @@
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 150px;
+  height: 150px;
 }
 
 .colorPickerDiv {
-  width: 15px;
-  height: 15px;
-  border: 1px #000000;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #000000;
+  margin: 2px;
+}
+
+.colorPickerTable {
+  margin: 0 auto;
+}
+
+#textColor, #bgColor {
+  display: none;
+}
+
+#index-guest {
+  background-image: url('../images/index-guest.png');
+  background-attachment: scroll;
+  background-size: 100%;
+}
+
+#auth-rect {
+  width: 50%;
+  height: 500px;
+  margin: 0 auto;
+  margin-top: 350px;
+  margin-bottom: 100px;
+  background: #FFFFFF;
+  border-radius: 15px;
+}
+
+#reg-rect {
+  width: 50%;
+  height: 600px;
+  margin: 0 auto;
+  margin-top: 350px;
+  margin-bottom: 100px;
+  background: #FFFFFF;
+  border-radius: 15px;
+}
+
+.auth-line {
+  width: 100%;
+  height: 3px;
+
+  background-color: rgba(113, 187, 255, 0.2);
+}
+
+.selected-auth-label {
+  font-family: Montserrat Alternates Regular;
+}
+
+.non-selected-auth-label {
+  font-family: Montserrat Alternates Thin;
+}
+
+.auth-label {
+  font-size: 28pt;
+  text-align: center;
+  color: black;
+  margin: 20px;
+}
+
+.auth-input {
+  background: rgba(0, 0, 0, 0.05);
+  border: 0px hidden rgba(0, 0, 0, 0.05);
+  border-radius: 15px;
+  margin-top: 30px;
+  padding-left: 15px;
+  width: 400px;
+  height: 80px;
+  font-family: Montserrat Alternates Regular;
+  font-size: 28px;
+  color: black;
+}
+
+.button-next {
+  width: 200px;
+  height: 90px;
+  margin-top: 30px;
+  background: #71BBFF;
+  border: 0px solid black;
+  border-radius: 15px;
+  color: white;
+  font-family: Montserrat Alternates Bold;
+  font-size: 28px;
+}
+
+.auth-label-td:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.visibility-gone {
+  display: none;
+}
+
+header ul {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100%;
+}
+
+header li {
+  display: flex;
+}
+
+header ul a {
+  text-decoration: none;
+  color: black;
+  padding: 20px;
+  font-family: Montserrat Alternates Light;
+}
+
+header span {
+  margin-top: 4px;
+}
+
+header ul a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.header-main-circle {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+header li img {
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
+}
+
+.username {
+  position: absolute;
+  top: 50px;
+  left: 200px;
+  font-family: Montserrat Alternates Medium;
+  color: white;
+  font-size: 28px;
+}
+
+.main-buttons {
+  position: absolute;
+  top: 100px;
+  left: 200px;
+  display: flex;
+}
+
+.main-buttons img {
+  margin-right: 10px;
+}
+
+.fileFragmentClass {
+  background: #FFFFFF;
+  border: 5px solid;
+  box-sizing: border-box;
+  border-radius: 34px;
+  padding: 30px;
+  margin-bottom: 20px;
+  color: black;
+  font-family: Montserrat Alternates Light;
+  font-size: 28px;
+}
+
+#filesContainer {
+  margin: 300px 50px 10px 50px;
+}
+
+.fileStar {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+}
+
+.fileNameDiv {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+
+.start-speed-circle {
+  position: absolute;
+  top: 300px;
+  right: 500px;
 }

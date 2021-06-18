@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TelePROmpter</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/fonts.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
+</head>
+<body id="index-guest">
+<div id="auth-rect">
+  <table width="100%">
+    <tr>
+      <td width="50%" class="auth-label-td" style="border-radius: 15px 0px 0px 0px;" onclick="openLogin()">
+        <div class="auth-label"><div class="selected-auth-label">Авторизация</div></div>
+      </td>
+      <td width="50%" class="auth-label-td" style="border-radius: 0px 15px 0px 0px;" onclick="openRegister()">
+        <div class="auth-label"><div class="non-selected-auth-label">Регистрация</div></div>
+      </td>
+    </tr>
+  </table>
+  <div class="auth-line"></div>
+  <form method="post" action="/login" align="center" style="margin-top: 30px;">
+    <input class="auth-input" type="email" placeholder="Email" name="email"></input><br>
+    <input class="auth-input" type="password" placeholder="Пароль" name="password"></input><br>
+    <button type="submit" class="button-next">Далее</button>
+  </form>
+</div>
+<div id="reg-rect" class="visibility-gone">
+  <table width="100%">
+    <tr>
+      <td width="50%" class="auth-label-td" style="border-radius: 15px 0px 0px 0px;" onclick="openLogin()">
+        <div class="auth-label"><div class="non-selected-auth-label">Авторизация</div></div>
+      </td>
+      <td width="50%" class="auth-label-td" style="border-radius: 0px 15px 0px 0px;" onclick="openRegister()">
+        <div class="auth-label"><div class="selected-auth-label">Регистрация</div></div>
+      </td>
+    </tr>
+  </table>
+  <div class="auth-line"></div>
+  <form method="post" action="/register" align="center" style="margin-top: 30px;">
+    <input class="auth-input" type="text" placeholder="Name" name="name"></input><br>
+    <input class="auth-input" type="email" placeholder="Email" name="email"></input><br>
+    <input class="auth-input" type="password" placeholder="Пароль" name="password"></input><br>
+    <button type="submit" class="button-next">Далее</button>
+  </form>
+</div>
+
+<!-- Scripts: -->
+<script type="text/javascript">
+var login = true;
+let regRect = document.getElementById("reg-rect");
+let authRect = document.getElementById("auth-rect");
+function openAnother() {
+  login = !login;
+  if (!login) {
+    regRect.classList.remove("visibility-gone");
+    authRect.classList.add("visibility-gone");
+  } else {
+    authRect.classList.remove("visibility-gone");
+    regRect.classList.add("visibility-gone");
+  }
+  // let ns = document.getElementsByClassName("non-selected-auth-label")[0];
+  // let s = document.getElementsByClassName("selected-auth-label")[0];
+  // ns.classList.remove("non-selected-auth-label");
+  // ns.classList.add("selected-auth-label");
+  // s.classList.remove("selected-auth-label");
+  // s.classList.add("non-selected-auth-label");
+}
+function openRegister() {
+  if (login) openAnother();
+}
+function openLogin() {
+  if (!login) openAnother();
+}
+</script>
+</body>
+</html>

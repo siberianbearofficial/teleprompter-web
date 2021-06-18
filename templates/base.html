@@ -5,23 +5,26 @@
     <title> {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/popupanimations.css')}}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/fonts.css')}}">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"> -->
 </head>
 <body>
-  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-      <span class="fs-4">Телесуфлер</span>
-    </a>
-
-    <ul class="nav nav-pills">
-      <li class="nav-item"><a href="/login" class="nav-link active" aria-current="page">Войти</a></li>
-      <li class="nav-item"><a href="/create" class="nav-link" aria-current="page">Создать</a></li>
-      <li class="nav-item"><a href="/signup" class="nav-link">Зарегистрироваться</a></li>
-      <li class="nav-item"><a href="/settings" class="nav-link">Настройки</a></li>
-      <li class="nav-item"><a href="/profile" class="nav-link">Профиль</a></li>
-      <li class="nav-item"><a href="/files-list" class="nav-link">Список документов</a></li>
-      <li class="nav-item"><a href="/" class="nav-link">Главная</a></li>
+  <header>
+    <img class="header-main-circle" src="{{url_for('static', filename='images/ellipse-9.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false"></img>
+    <img src="{% if downloaded %}{{url_for('static', filename='images/avatar.jpeg')}}{% else %}{{url_for('static', filename='images/avatar-guest.jpeg')}}{% endif %}" class="avatar"></img>
+    <div class="username">{{name}}</div>
+    <div class="main-buttons">
+      <a href="/create">
+        <img src="{{url_for('static', filename='images/create-button.png')}}">
+      </a>
+      <a href="/sign-out">
+        <img src="{{url_for('static', filename='images/logout-button.png')}}">
+      </a>
+    </div>
+    <ul>
+      <a href="/settings"><li><img src="{{url_for('static', filename='images/settings-button.png')}}" class="settings-button-img"><span>Настройки</span></li></a>
+      <a href="/profile"><li><img src="{{url_for('static', filename='images/account-button.png')}}" class="account-button-img"><span>Аккаунт</span></li></a>
+      <a href="/"><li><img src="{{url_for('static', filename='images/home-button.png')}}" class="home-button-img"><span>Главная</span></li></a>
     </ul>
   </header>
 {% block body %}{% endblock %}

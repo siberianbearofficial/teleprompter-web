@@ -1,0 +1,24 @@
+@font-face {
+  font-family: Montserrat Alternates Regular;
+  src: url("../fonts/montserrat_alternates_regular.ttf");
+}
+
+@font-face {
+  font-family: Montserrat Alternates Thin;
+  src: url("../fonts/montserrat_alternates_thin.ttf");
+}
+
+@font-face {
+  font-family: Montserrat Alternates Light;
+  src: url("../fonts/montserrat_alternates_light.ttf");
+}
+
+@font-face {
+  font-family: Montserrat Alternates Medium;
+  src: url("../fonts/montserrat_alternates_medium.ttf");
+}
+
+@font-face {
+  font-family: Montserrat Alternates Bold;
+  src: url("../fonts/montserrat_alternates_bold.ttf");
+}
