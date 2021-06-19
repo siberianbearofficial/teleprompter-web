@@ -32,7 +32,7 @@
 
   var filesContainer = document.getElementById("filesContainer");
 
-  defaultStorage.ref().child('{{user_id}}/files').listAll()
+  defaultStorage.ref().child(user_id + '/files').listAll()
   .then((res) => {
     let itemsList = [];
     res.items.forEach((itemRef) => {
@@ -68,7 +68,7 @@
           }
           console.log(fileStarValue);
           nameDiv.innerHTML = fileName;
-          link.href = "/edit/{{user_id}}/" + fileName;
+          link.href = "/edit/" + user_id + "/" + fileName;
           date.innerHTML = new Date(metadata.timeCreated).toLocaleDateString();
           fileFragment.getElementsByClassName("fileFragmentClass")[0].style.borderColor = borderColors[getRandomInt(0, 3)];
           console.log(fileFragment);
