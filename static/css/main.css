@@ -199,6 +199,83 @@ header li img {
 
 .start-speed-circle {
   position: absolute;
-  top: 300px;
-  right: 500px;
+  top: 100px;
+  right: 80px;
+  width: 500px;
+  height: 500px;
+}
+
+.color-circle {
+  position: absolute;
+  left: 480px;
+  top: 80px;
+  width: 400px;
+  height: 400px;
+}
+
+.size-circle {
+  position: absolute;
+  left: 180px;
+  top:300px;
+  width: 300px;
+  height: 300px;
+}
+
+.about-circle {
+  position: absolute;
+  top: 450px;
+  right: 560px;
+  width: 200px;
+  height: 200px;
+}
+
+#textColorDiv {
+  position: absolute;
+  left: 640px;
+  top: 295px;
+}
+
+#bgColorDiv {
+  position: absolute;
+  left: 785px;
+  top: 295px;
+}
+
+#speed {
+  position: absolute;
+  top: 390px;
+  right: 120px;
+  width: 400px;
+  height: 5px;
+}
+
+.size-text {
+  position: absolute;
+  left: 295px;
+  top:495px;
+  font-family: Montserrat Alternates Medium;
+  font-size: 48px;
+  color: white;
+}
+
+#textSize {
+  display: none;
+}
+
+.size-right-arrow {
+  position: absolute;
+  left: 375px;
+  top: 500px;
+}
+
+.size-left-arrow {
+  position: absolute;
+  left: 260px;
+  top: 500px;
+}
+
+.settings-save-button {
+  position: absolute;
+  right: 100px;
+  top: 100px;
 }

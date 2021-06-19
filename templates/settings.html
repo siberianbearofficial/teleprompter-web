@@ -1,18 +1,34 @@
 {% extends 'base.html' %} {% block title %}Настройки{% endblock %} {% block body %}
 <form method="post">
+
 <!-- Speed: -->
-<img class="start-speed-circle" src="{{url_for('static', filename='images/start-speed-circle.png')}}">
+<img class="start-speed-circle" src="{{url_for('static', filename='images/start-speed-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
 <input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}">
+
 <!-- Size: -->
+<img class="size-circle" src="{{url_for('static', filename='images/size-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
+<div class="size-text">{{textSize}}</div>
+<img class="size-left-arrow" onclick="decreaseTextSize()" src="{{url_for('static', filename='images/size-left-arrow.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
+<img class="size-right-arrow" onclick="increaseTextSize()" src="{{url_for('static', filename='images/size-right-arrow.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
 <input type="number" class="form-control" id="textSize" name="textSize" value="{{textSize}}">
+
+<!-- Colors: -->
+<img class="color-circle" src="{{url_for('static', filename='images/color-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
+
 <!-- Text color: -->
 <input type="range" min="1" max="24" class="form-control" id="textColor" name="textColor" value="{{textColor}}">
 <div id="textColorDiv" class="colorPickerDiv" data-modal="modal_1" onclick="openTxt()"></div>
+
 <!-- Background color: -->
 <input type="range" min="1" max="24" value="{{bgColor}}" class="form-control" id="bgColor" name="bgColor">
 <div id="bgColorDiv" class="colorPickerDiv" data-modal="modal_1" onclick="openBg()"></div>
+
+<!-- About: -->
+<a href="/about"><img class="about-circle" src="{{url_for('static', filename='images/about-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false"></a>
+
 <!-- Submit button: -->
-<button type="submit">Сохранить</button>
+<button type="submit" class="settings-save-button">Сохранить</button>
+
 </form>
 
 <!-- Popup blocks -->
@@ -101,13 +117,17 @@
       </td>
     </tr>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <!-- Scripts -->
 <script type="text/javascript">
 textColorDiv = document.getElementById("textColorDiv");
 bgColorDiv = document.getElementById("bgColorDiv");
 textColor = document.getElementById("textColor");
 bgColor = document.getElementById("bgColor");
+textSizeDiv = document.getElementsByClassName("size-text")[0];
+textSize = document.getElementById("textSize");
 console.log(textColorDiv);
 console.log(bgColorDiv);
 
@@ -120,6 +140,25 @@ function openBg() {
 
 function openTxt() {
   open(0);
+}
+
+function increaseTextSize() {
+  changeTextSize(true);
+}
+
+function decreaseTextSize() {
+  changeTextSize(false);
+}
+
+function changeTextSize(inc) {
+  var textSizeValue = Number(textSizeDiv.innerHTML);
+  if (inc) {
+    textSizeValue++;
+  } else {
+    textSizeValue--;
+  }
+  textSizeDiv.innerHTML = textSizeValue;
+  textSize.value = textSizeValue;
 }
 
 function open(i) {
