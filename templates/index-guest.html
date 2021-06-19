@@ -20,11 +20,15 @@
     </tr>
   </table>
   <div class="auth-line"></div>
-  <form method="post" action="/login" align="center" style="margin-top: 30px;">
+  <!-- <form method="post" action="/login" align="center" style="margin-top: 30px;"> -->
+  <form align="center" style="margin-top: 30px;" id="auth-form">
     <input class="auth-input" type="email" placeholder="Email" name="email"></input><br>
     <input class="auth-input" type="password" placeholder="Пароль" name="password"></input><br>
-    <button type="submit" class="button-next">Далее</button>
+    <!-- <button type="submit" class="button-next">Далее</button> -->
   </form>
+  <div align="center">
+    <button onclick="authUser()" class="button-next">Далее</button>
+  </div>
 </div>
 <div id="reg-rect" class="visibility-gone">
   <table width="100%">
@@ -46,11 +50,42 @@
   </form>
 </div>
 
+<div class="visibility-gone">
+  <form method="post" action="/save-user-id" id="saveuseridform">
+    <input type="text" name="userid" id="userid"></input>
+  </form>
+</div>
+
 <!-- Scripts: -->
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyA3ZYaV-3uJmusX3-nfV71CT5pbjyLqbtY",
+    authDomain: "teleprompterandroidjava.firebaseapp.com",
+    databaseURL: "https://teleprompterandroidjava-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "teleprompterandroidjava",
+    storageBucket: "teleprompterandroidjava.appspot.com",
+    messagingSenderId: "300471537841",
+    appId: "1:300471537841:web:de99d6f9e4316faeddd290",
+    measurementId: "G-Y3RVRFQ01W"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+<script type="text/javascript">var firebaseAuth = firebase.auth();</script>
 <script type="text/javascript">
 var login = true;
 let regRect = document.getElementById("reg-rect");
 let authRect = document.getElementById("auth-rect");
+var saveUserIdForm = document.getElementById("saveuseridform");
+var authForm = document.getElementById("auth-form");
+console.log(authForm);
 function openAnother() {
   login = !login;
   if (!login) {
@@ -72,6 +107,33 @@ function openRegister() {
 }
 function openLogin() {
   if (!login) openAnother();
+}
+
+function authUser() {
+  var inputs = authForm.getElementsByTagName('input');
+  console.log(inputs);
+  var email; var password;
+  email = inputs[0].value;
+  password = inputs[1].value;
+  if (!email.includes('@') || !email.includes('.')) {
+    alert("Email is incorrect!");
+  } else if (password.length < 6) {
+    alert("Password should contain at least 6 characters!");
+  }
+  firebaseAuth.signInWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    var user = userCredential.user;
+    console.log(user.uid);
+    document.getElementById('userid').value = user.uid;
+    saveUserIdForm.submit();
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    alert(errorMessage);
+    console.log(errorCode);
+    console.log(errorMessage);
+  });
 }
 </script>
 </body>

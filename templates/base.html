@@ -15,8 +15,10 @@
     <!-- Use: ondrag="return false" ondragdrop="return false" ondragstart="return false" -->
 
     <img class="header-main-circle" src="{{url_for('static', filename='images/ellipse-9.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false"></img>
-    <img src="{% if downloaded %}{{url_for('static', filename='images/avatar.jpeg')}}{% else %}{{url_for('static', filename='images/avatar-guest.jpeg')}}{% endif %}" class="avatar"></img>
-    <div class="username">{{name}}</div>
+    <!-- <img src="{% if downloaded %}{{url_for('static', filename='images/avatar.jpeg')}}{% else %}{{url_for('static', filename='images/avatar-guest.jpeg')}}{% endif %}" class="avatar"></img> -->
+    <img src="#" class="avatar"></img>
+    <!-- <div class="username">{{name}}</div> -->
+    <div class="username"></div>
     <div class="main-buttons">
       <a href="/create">
         <img src="{{url_for('static', filename='images/create-button.png')}}">
@@ -36,6 +38,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-database.js"></script>
 
 <script>
   // Your web app's Firebase configuration
@@ -56,6 +59,42 @@
 </script>
 <script type="text/javascript">
 var defaultStorage = firebase.storage();
+var storageRef = defaultStorage.ref();
+var defaultDatabase = firebase.database();
+var databaseRef = defaultDatabase.ref();
+</script>
+<script type="text/javascript">
+
+  var user_id;
+  var x = new XMLHttpRequest();
+  x.open("GET", "/get-user-id", false);
+  x.onload = function (){
+      user_id = x.responseText;
+      if (user_id == "-1") {
+        document.location.href = "/auth";
+      }
+      // Когда загрузился user_id, можно приступать к логике
+      doLogic();
+  }
+  x.send(null);
+
+function doLogic() {
+  storageRef.child(user_id + '/avatar.jpeg').getDownloadURL()
+  .then((url) => {
+    var avatarImage = document.getElementsByClassName('avatar')[0];
+    avatarImage.setAttribute('src', url);
+  })
+  .catch((error) => {
+    console.log('Error in downloading avatar via js');
+  });
+
+  let nameDiv = document.getElementsByClassName('username')[0];
+  var nameRef = databaseRef.child('users/' + user_id + '/name');
+  nameRef.on('value', (snapshot) => {
+    nameDiv.innerHTML = snapshot.val();
+    console.log(snapshot.val());
+  });
+}
 </script>
 {% block scripts %}{% endblock %}
 </body>

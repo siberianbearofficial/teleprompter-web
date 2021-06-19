@@ -32,6 +32,8 @@ storage = firebase.storage()
 userId = ''
 current_user = dict()
 
+userIdsDict = {}
+
 
 def sign_out():
   # Удаляем предыдущий аватар, если он еще сохранен
@@ -53,6 +55,36 @@ def home():
   return redirect('/')
 
 
+@app.route('/exception')
+def exception():
+  return render_template('exception.html')
+
+
+@app.route('/save-user-id', methods=['POST', 'GET'])
+def saveuserid():
+  if request.method == 'POST':
+    user_id_got = request.form['userid']
+    userIdsDict[request.remote_addr] = user_id_got
+    print(userIdsDict)
+  return redirect('/')
+
+
+@app.route('/get-user-id')
+def getuserid():
+  user_id = '-1'
+  try:
+    user_id = userIdsDict[request.remote_addr]
+    print(user_id)
+  except:
+    print('Exception')
+  return user_id
+
+
+@app.route('/auth')
+def auth():
+  return render_template('index-guest.html')
+
+
 @app.route('/sign-out')
 def signout():
   sign_out()
@@ -66,21 +98,25 @@ def forhtmltests():
 
 @app.route('/')
 def index():
-  name = ''
-  global current_user
-  global userId
-  if current_user != dict():
-    userId = current_user['localId']
-    print('Signed in')
-  if userId != '':
-    print('Trying to get name...')
-    name = db.child("users").child(userId).child('name').get().val()
-    if os.path.exists('static/images/avatar.jpeg'):
-      return render_template('index.html', name=name, downloaded=True, user_id=userId)
-    else:
-      return render_template('index.html', name=name, downloaded=False, user_id=userId)
-  else:
-    return render_template('index-guest.html')
+  return render_template('index.html')
+
+
+# def index():
+#   name = ''
+#   global current_user
+#   global userId
+#   if current_user != dict():
+#     userId = current_user['localId']
+#     print('Signed in')
+#   if userId != '':
+#     # print('Trying to get name...')
+#     # name = db.child("users").child(userId).child('name').get().val()
+#     if os.path.exists('static/images/avatar.jpeg'):
+#       return render_template('index.html', name=name, downloaded=True, user_id=userId)
+#     else:
+#       return render_template('index.html', name=name, downloaded=False, user_id=userId)
+#   else:
+#     return render_template('index-guest.html')
 
 
 @app.route('/about')
@@ -193,7 +229,7 @@ def settings():
 
       speed = str(toPercentValue(int(speed)))
       
-      return render_template('settings.html', bgColor=bgColor, textColor=textColor, textSize=textSize, speed=speed)
+      return render_template('settings.html', bgColor=bgColor, textColor=textColor, textSize=textSize, speed=speed, user_id=userId)
   else:
     return redirect('/')
 
@@ -209,7 +245,7 @@ def login():
       try:
         current_user = auth.sign_in_with_email_and_password(email, password)
         userId = current_user['localId']
-        downloadAvatar(storage, current_user)
+        # downloadAvatar(storage, current_user)
         return redirect('/')
       except:
         return render_template('exception.html')
@@ -253,7 +289,7 @@ def saveavatar():
   avatarFile = request.files['avatarFile']
   avatarFile.save('static/images/avatar.jpeg')
   crop()
-  uploadAvatar(storage, current_user)
+  # uploadAvatar(storage, current_user)
   return redirect('/')
 
 
