@@ -1,3 +1,3 @@
 # Teleprompter-Web
 
-Made with Pyrebase lib (https://github.com/thisbejim/Pyrebase) for FirebaseAPI
+The web version for our Android app (https://github.com/siberianbearofficial/Teleprompter-Android)
