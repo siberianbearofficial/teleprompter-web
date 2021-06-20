@@ -22,3 +22,8 @@
   font-family: Montserrat Alternates Bold;
   src: url("../fonts/montserrat_alternates_bold.ttf");
 }
+
+@font-face {
+  font-family: Montserrat Alternates Black;
+  src: url("../fonts/montserrat_alternates_black.ttf");
+}

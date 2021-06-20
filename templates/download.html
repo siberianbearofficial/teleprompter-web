@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Подождите...{% endblock %}
+
+{% block body %}
+<div class="visibility-gone">
+<form action="/get-file-content" method="POST" id="send-download-url">
+<input type="text" id="send-download-url-input-url" name="url"></input>
+<input type="text" id="send-download-url-input-title" name="title"></input>
+</form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+
+  async function sendDownloadUrl(url, data) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const resp = await response.text();
+      console.log(resp);
+    } catch (error) {
+      console.error('Ошибка:', error);
+    }
+  }
+
+  if (user_id == '{{localId}}') {
+    console.log("True");
+    storageRef.child(user_id).child('files').child('{{fileName}}').getDownloadURL().then((url) => {
+      //data = {'url': url};
+      //sendDownloadUrl('/get-file-content', data);
+      document.getElementById('send-download-url-input-url').value = url;
+      document.getElementById('send-download-url-input-title').value = "{{fileName}}";
+      document.getElementById('send-download-url').submit();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  } else {
+    console.log("False");
+    alert("У Вас нет прав на просмотр этого файла");
+    document.location.href = "";
+  }
+</script>
+{% endblock %}

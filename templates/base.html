@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/popupanimations.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/fonts.css')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"> -->
 </head>
 <body>
@@ -23,7 +24,7 @@
       <a href="/create">
         <img src="{{url_for('static', filename='images/create-button.png')}}">
       </a>
-      <a href="/sign-out">
+      <a href="javascript:signOut();">
         <img src="{{url_for('static', filename='images/logout-button.png')}}">
       </a>
     </div>
@@ -34,11 +35,16 @@
     </ul>
   </header>
 {% block body %}{% endblock %}
+<footer width="100%">
+  <div align="center" class="dev-info">Developed by: <a href="https://vk.com/alexey_orlov65">Aleksei Orlov</a> - Designed by: <a href="https://vk.com/business_operator">Yuri Morozoff</a></div>
+
+</footer>
 <!-- Scripts: -->
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
 
 <script>
   // Your web app's Firebase configuration
@@ -62,6 +68,7 @@ var defaultStorage = firebase.storage();
 var storageRef = defaultStorage.ref();
 var defaultDatabase = firebase.database();
 var databaseRef = defaultDatabase.ref();
+var firebaseAuth = firebase.auth();
 </script>
 <script type="text/javascript">
 
@@ -79,13 +86,14 @@ var databaseRef = defaultDatabase.ref();
   x.send(null);
 
 function doLogic() {
+  var avatarImage = document.getElementsByClassName('avatar')[0];
   storageRef.child(user_id + '/avatar.jpeg').getDownloadURL()
   .then((url) => {
-    var avatarImage = document.getElementsByClassName('avatar')[0];
     avatarImage.setAttribute('src', url);
   })
   .catch((error) => {
     console.log('Error in downloading avatar via js');
+    avatarImage.setAttribute('src', '{{url_for("static", filename="images/avatar-guest.jpeg")}}')
   });
 
   let nameDiv = document.getElementsByClassName('username')[0];
@@ -93,6 +101,15 @@ function doLogic() {
   nameRef.on('value', (snapshot) => {
     nameDiv.innerHTML = snapshot.val();
     console.log(snapshot.val());
+  });
+}
+
+function signOut() {
+  firebaseAuth.signOut().then(() => {
+    console.log("Signed out");
+    document.location.href = "/sign-out";
+  }).catch((error) => {
+    console.log("Error in signing out!");
   });
 }
 </script>

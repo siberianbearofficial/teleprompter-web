@@ -3,19 +3,16 @@
 {% block title %}Редактирование{% endblock %}
 
 {% block body %}
-<div class="container mt-4 mb-4">
-  <div class="row justify-content-md-center">
-    <div class="col-md-12 col-lg-8">
+<div class="edit-container">
       <form method='POST'>
         {% if notitle %}
           <div class="alert-danger">Необходимо указать название файла!</div>
         {% endif %}
-        <input type="text" value="{{title}}" name="title"></input>
+        <input class="profile-input" id="title" type="text" value="{{title}}" name="title"></input>
         <textarea id="editor" name="editor">{{content}}</textarea>
-        <button type="submit" class="w-100 btn btn-lg btn-primary">Сохранить</button>
+        <!-- <button type="submit" class="w-100 btn btn-lg btn-primary">Сохранить</button> -->
       </form>
-    </div>
-  </div>
+      <button class="button-next" onclick="saveText()">Сохранить</button>
 </div>
 {% endblock %}
 
@@ -26,5 +23,20 @@
     selector: 'textarea#editor',
     menubar: false
   });
+</script>
+<script>
+function saveText() {
+  var contentString = tinyMCE.get('editor').getBody().innerHTML;
+  // console.log(contentString);
+  let blob = new Blob([contentString], {type: 'text/html'});
+  console.log(blob);
+  var title = document.getElementById('title').value;
+  storageRef.child(user_id + '/files/' + title + '.html').put(blob).then((snapshot) => {
+  console.log('Uploaded a blob or file!');
+  console.log(title);
+  console.log(contentString);
+  alert('Сохранено :)');
+});
+}
 </script>
 {% endblock %}
