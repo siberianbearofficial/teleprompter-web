@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% block title %}Настройки{% endblock %} {% block body %}
-<form method="post">
+<form method="post" id="settings-form">
 
 <!-- Speed: -->
 <img class="start-speed-circle" src="{{url_for('static', filename='images/start-speed-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
-<input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}">
+<input type="range" min="1" max="100" class="form-control" id="speed" name="speed" value="{{speed}}" onchange="sendSpeed()">
 
 <!-- Size: -->
 <img class="size-circle" src="{{url_for('static', filename='images/size-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false">
@@ -26,8 +26,8 @@
 <!-- About: -->
 <a href="/about"><img class="about-circle" src="{{url_for('static', filename='images/about-circle.png')}}" ondrag="return false" ondragdrop="return false" ondragstart="return false"></a>
 
-<!-- Submit button: -->
-<button type="submit" class="settings-save-button">Сохранить</button>
+<!-- Submit button:
+<button type="submit" class="settings-save-button">Сохранить</button> -->
 
 </form>
 
@@ -120,7 +120,7 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Scripts -->
+<!-- Scripts: -->
 <script type="text/javascript">
 textColorDiv = document.getElementById("textColorDiv");
 bgColorDiv = document.getElementById("bgColorDiv");
@@ -128,6 +128,7 @@ textColor = document.getElementById("textColor");
 bgColor = document.getElementById("bgColor");
 textSizeDiv = document.getElementsByClassName("size-text")[0];
 textSize = document.getElementById("textSize");
+speed = document.getElementById('speed');
 console.log(textColorDiv);
 console.log(bgColorDiv);
 
@@ -159,6 +160,105 @@ function changeTextSize(inc) {
   }
   textSizeDiv.innerHTML = textSizeValue;
   textSize.value = textSizeValue;
+
+  sendTextSize();
+}
+
+// Form submit to Firebase:
+var settingsRef = databaseRef.child('users/' + user_id + '/settings');
+
+function sendSettingsToFirebase() {
+  var textSizeValue = textSize.value;
+  var textColorValue = textColor.value;
+  var bgColorValue = bgColor.value;
+  var speedValue = speed.value;
+
+  settingsRef.child('bgColor').set(bgColorValue + '');
+  settingsRef.child('textColor').set(textColorValue + '');
+  settingsRef.child('textSize').set(textSizeValue + '');
+  settingsRef.child('speed').set(speedValue + '');
+}
+
+function sendSpeed() {
+  var speedValue = speed.value;
+  var x = new XMLHttpRequest();
+  x.open("GET", "/to-speed-value?speedGot=" + speedValue, true);
+  x.onload = function (){
+      speedValue = x.responseText;
+      settingsRef.child('speed').set(speedValue + '');
+  }
+  x.send(null);
+}
+
+function sendTextSize() {
+  var textSizeValue = textSize.value;
+  settingsRef.child('textSize').set(textSizeValue + '');
+}
+
+function sendTextColor() {
+  var textColorValue = textColor.value;
+  settingsRef.child('textColor').set(textColorValue + '');
+}
+
+function sendBgColor() {
+  var bgColorValue = bgColor.value;
+  settingsRef.child('bgColor').set(bgColorValue + '');
+}
+
+settingsRef.on('value', (snapshot) => {
+  const data = snapshot.val();
+  console.log(data);
+  
+  var textSizeValue = data['textSize'];
+  var textColorValue = data['textColor'];
+  var bgColorValue = data['bgColor'];
+  var speedValue = data['speed'];
+
+  var x = new XMLHttpRequest();
+  x.open("GET", "/to-percent-value?speedGot=" + speedValue, true);
+  x.onload = function (){
+      speedValue = x.responseText;
+      updateUI(textColorValue, bgColorValue, textSizeValue, speedValue);
+  }
+  x.send(null);
+});
+
+function updateUI(textColorValue, bgColorValue, textSizeValue, speedValue) {
+  var flag1 = false;
+  var flag2 = false;
+  var flag3 = false;
+  var flag4 = false;
+  if (textColorValue == null) {
+    textColor.value = 0;
+    flag1 = true;
+  } else {
+    textColorDiv.style.background = colors[textColorValue];
+    textColor.value = textColorValue;
+  }
+  if (bgColorValue == null) {
+    bgColor.value = 1;
+    flag2 = true;
+  } else {
+    bgColorDiv.style.background = colors[bgColorValue];
+    bgColor.value = bgColorValue;
+  }
+  if (textSizeValue == null) {
+    textSize.value = 16;
+    flag3 = true;
+  } else {
+    textSize.value = textSizeValue;
+    textSizeDiv.innerHTML = textSizeValue;
+  }
+  if (speedValue == null) {
+    speedValue = 1;
+    flag4 = true;
+  } else {
+    speed.value = speedValue;
+  }
+  if (flag1) sendTextColor();
+  if (flag2) sendBgColor();
+  if (flag3) sendTextSize();
+  if (flag4) sendSpeed();
 }
 
 function open(i) {
@@ -191,6 +291,12 @@ colors = [
 function changeTextColor(colorId) {
   colorDivForChange.style.background = colors[colorId];
   colorForValue.value = colorId;
+
+  if (colorForValue == textColor) {
+    sendTextColor();
+  } else {
+    sendBgColor();
+  }
 }
 
 for (let i = 0; i < 24; i++) {
@@ -199,8 +305,8 @@ for (let i = 0; i < 24; i++) {
   elem.dataset.close="";
 }
 
-textColorDiv.style.background = colors[{{textColor}}]
-bgColorDiv.style.background = colors[{{bgColor}}]
+textColorDiv.style.background = colors[0];
+bgColorDiv.style.background = colors[0];
 
 </script>
 <script type="text/javascript">var typeAnimate = 'fade';</script>

@@ -2,22 +2,77 @@
 
 {% block title %}Профиль{% endblock %}
 {% block body %}
-  <div class="container mt-5">
-    <img src="{% if downloaded %}{{url_for('static', filename='images/avatar.jpeg')}}{% else %}{{url_for('static', filename='images/avatar-guest.jpeg')}}{% endif %}" class="avatar"></img>
-    <form method="post" action="/save-avatar" enctype="multipart/form-data">
-      <input type="file" class="form-control" id="avatarFile" name="avatarFile">
-      <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить аватар</button>
-    </form>
-    <form method="post">
-      <h1 class="h3 mb-3 fw-normal">Профиль</h1>
-      <input type="text" class="form-control" id="name" name="name" value="{{name}}">
-      <button class="mt-2 w-100 btn btn-lg btn-primary" type="submit">Сохранить изменения</button>
-    </form>
-  </div>
+<table class="profile-content">
+  <tr>
+    <td><div class="profile-labels">Имя</div></td>
+    <td><input type="text" class="profile-input" id="name" name="name" value="" onchange="saveName()"></td>
+  </tr>
+  <tr style="vertical-align: middle;">
+    <td><div class="profile-labels">Email</div></td>
+    <td class="profile-input" id="emailProfileDiv"></td>
+  </tr>
+  <tr>
+    <td><div class="profile-labels">Аватарка</div></td>
+    <td><form enctype="multipart/form-data" id="save-avatar-form">
+    
+    <div class="example-2">
+      <div class="form-group">
+        <input type="file" id="avatarFile" name="avatarFile" onchange="saveAvatar()" class="input-file">
+        <label for="avatarFile" class="btn btn-tertiary js-labelFile">
+          <i class="icon fa fa-check"></i>
+          <span class="js-fileName">Загрузить файл</span>
+        </label>
+      </div>
+    </div>
+  </form></td>
+  </tr>
+</table>
 {% endblock %}
 
 {% block scripts %}
   <!-- Scripts: -->
+  <script type="text/javascript">
+    var emailProfileDiv = document.getElementById('emailProfileDiv');
+    var nameInput = document.getElementById('name');
+    var saveAvatarForm = document.getElementById('save-avatar-form');
+
+    var nameRef = databaseRef.child('users/' + user_id + '/name');
+    var emailRef = databaseRef.child('users/' + user_id + '/email');
+
+    nameRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      nameInput.value = data;
+    });
+
+    emailRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      emailProfileDiv.innerHTML = data;
+    });
+
+    function saveName() {
+      var nameValue = nameInput.value;
+      nameRef.set(nameValue);
+    }
+
+    function saveAvatar() {
+      getCroppedAvatar();
+    }
+
+    async function getCroppedAvatar() {
+      const response = await fetch('/get-cropped-avatar', {
+        method: 'POST',
+        body: new FormData(saveAvatarForm)
+      });
+
+      const buffer = await response.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      const blob = new Blob([bytes.buffer]);
+
+      storageRef.child(user_id + '/avatar.jpeg').put(blob).then((snapshot) => {
+        document.location.href = "/profile";
+      });
+    }
+  </script>
   <script type="text/javascript">
     document.getElementsByClassName("account-button-img")[0].src = "{{url_for('static', filename='images/account-button-active.png')}}"
   </script>

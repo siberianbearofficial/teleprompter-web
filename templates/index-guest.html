@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="{{url_for('static', filename='css/fonts.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
 </head>
-<body id="index-guest">
+<!-- <body id="index-guest"> -->
+<body>
+  <div id="app-name">TelePROmpter</div>
 <div id="auth-rect">
   <table width="100%">
     <tr>
@@ -21,7 +23,7 @@
   </table>
   <div class="auth-line"></div>
   <!-- <form method="post" action="/login" align="center" style="margin-top: 30px;"> -->
-  <form align="center" style="margin-top: 30px;" id="auth-form">
+  <form align="center" style="margin-top: 20px;" id="auth-form">
     <input class="auth-input" type="email" placeholder="Email" name="email"></input><br>
     <input class="auth-input" type="password" placeholder="Пароль" name="password"></input><br>
     <!-- <button type="submit" class="button-next">Далее</button> -->
@@ -42,12 +44,16 @@
     </tr>
   </table>
   <div class="auth-line"></div>
-  <form method="post" action="/register" align="center" style="margin-top: 30px;">
+  <!-- <form method="post" action="/register" align="center" style="margin-top: 30px;"> -->
+  <form align="center" style="margin-top: 20px;" id="reg-form">
     <input class="auth-input" type="text" placeholder="Name" name="name"></input><br>
     <input class="auth-input" type="email" placeholder="Email" name="email"></input><br>
     <input class="auth-input" type="password" placeholder="Пароль" name="password"></input><br>
-    <button type="submit" class="button-next">Далее</button>
+    <!-- <button type="submit" class="button-next">Далее</button> -->
   </form>
+  <div align="center">
+    <button onclick="regUser()" class="button-next">Далее</button>
+  </div>
 </div>
 
 <div class="visibility-gone">
@@ -56,10 +62,13 @@
   </form>
 </div>
 
+<img src="{{url_for('static', filename='images/index-guest-2.png')}}" id="index-guest"></img>
+
 <!-- Scripts: -->
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-database.js"></script>
 
 <script>
   // Your web app's Firebase configuration
@@ -85,7 +94,9 @@ let regRect = document.getElementById("reg-rect");
 let authRect = document.getElementById("auth-rect");
 var saveUserIdForm = document.getElementById("saveuseridform");
 var authForm = document.getElementById("auth-form");
+var regForm = document.getElementById("reg-form");
 console.log(authForm);
+console.log(regForm);
 function openAnother() {
   login = !login;
   if (!login) {
@@ -125,6 +136,39 @@ function authUser() {
     var user = userCredential.user;
     console.log(user.uid);
     document.getElementById('userid').value = user.uid;
+    console.log(user);
+    saveUserIdForm.submit();
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    alert(errorMessage);
+    console.log(errorCode);
+    console.log(errorMessage);
+  });
+}
+
+function regUser() {
+  var inputs = regForm.getElementsByTagName('input');
+  console.log(inputs);
+  var email; var password; var name;
+  email = inputs[1].value;
+  password = inputs[2].value;
+  name = inputs[0].value;
+  if (!email.includes('@') || !email.includes('.')) {
+    alert("Email введен некорректно!");
+  } else if (password.length < 6) {
+    alert("Пароль должен содержать не меньше 6 символов!");
+  } else if (name == '') {
+    alert("Имя не должно быть пустым!");
+  }
+  firebaseAuth.createUserWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    var user = userCredential.user;
+    console.log(user.uid);
+    document.getElementById('userid').value = user.uid;
+    console.log(user);
+    firebase.database().ref().child('users/' + user.uid + '/name').set(name);
     saveUserIdForm.submit();
   })
   .catch((error) => {

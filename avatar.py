@@ -31,15 +31,15 @@ def resize_image(image, size):
     resized_image.save(image_path, quality=95)
 
 
-def downloadAvatar(storage, current_user):
-  try:
-    storage.child(current_user['localId']+'/avatar.jpeg').download('static/images/avatar.jpeg')
-  except:
-    print('Exception!')
+# def downloadAvatar(storage, current_user):
+#   try:
+#     storage.child(current_user['localId']+'/avatar.jpeg').download('static/images/avatar.jpeg')
+#   except:
+#     print('Exception!')
 
 
-def uploadAvatar(storage, current_user):
-  try:
-    storage.child(current_user['localId']+'/avatar.jpeg').put('static/images/avatar.jpeg', current_user['idToken'])
-  except:
-    print('Exception!')
+# def uploadAvatar(storage, current_user):
+#   try:
+#     storage.child(current_user['localId']+'/avatar.jpeg').put('static/images/avatar.jpeg', current_user['idToken'])
+#   except:
+#     print('Exception!')
