@@ -76,6 +76,7 @@ def topercentvalue():
 
 @app.route('/save-user-id', methods=['POST', 'GET'])
 def saveuserid():
+    global userIdsDict
     if request.method == 'POST':
         user_id_got = request.form['userid']
         userIdsDict[request.remote_addr] = user_id_got
@@ -85,6 +86,7 @@ def saveuserid():
 
 @app.route('/get-user-id')
 def getuserid():
+    global userIdsDict
     user_id = '-1'
     try:
         user_id = userIdsDict[request.remote_addr]
