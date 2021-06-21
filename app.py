@@ -91,8 +91,8 @@ def getuserid():
     try:
         user_id = userIdsDict[request.remote_addr]
         print(user_id)
-    except:
-        print('Exception')
+    except Exception as e:
+        print(e)
     return user_id
 
 
