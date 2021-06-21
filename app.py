@@ -7,9 +7,9 @@ import requests
 import json
 
 app = Flask(
-	__name__,
-	template_folder='templates',
-	static_folder='static'
+    __name__,
+    template_folder='templates',
+    static_folder='static'
 )
 
 # config = {
@@ -38,15 +38,15 @@ userIdsDict = {}
 
 
 def sign_out():
-  # Удаляем предыдущий аватар, если он еще сохранен
-  try:
-    os.remove('static/images/avatar.jpeg')
-  except:
-    print('Can\'t remove avatar')
-  global userId
-  global current_user
-  userId = ''
-  current_user = dict()
+    # Удаляем предыдущий аватар, если он еще сохранен
+    try:
+        os.remove('static/images/avatar.jpeg')
+    except:
+        print('Can\'t remove avatar')
+    global userId
+    global current_user
+    userId = ''
+    current_user = dict()
 
 
 sign_out()
@@ -54,68 +54,68 @@ sign_out()
 
 @app.route('/home')
 def home():
-  return redirect('/')
+    return redirect('/')
 
 
 @app.route('/exception')
 def exception():
-  return render_template('exception.html')
+    return render_template('exception.html')
 
 
 @app.route('/to-speed-value')
 def tospeedvalue():
-  speedGot = int(request.args['speedGot'])
-  return str(toSpeedValue(speedGot))
+    speedGot = int(request.args['speedGot'])
+    return str(toSpeedValue(speedGot))
 
 
 @app.route('/to-percent-value')
 def topercentvalue():
-  speedGot = int(request.args['speedGot'])
-  return str(toPercentValue(speedGot))
+    speedGot = int(request.args['speedGot'])
+    return str(toPercentValue(speedGot))
 
 
 @app.route('/save-user-id', methods=['POST', 'GET'])
 def saveuserid():
-  if request.method == 'POST':
-    user_id_got = request.form['userid']
-    userIdsDict[request.remote_addr] = user_id_got
-    print(userIdsDict)
-  return redirect('/')
+    if request.method == 'POST':
+        user_id_got = request.form['userid']
+        userIdsDict[request.remote_addr] = user_id_got
+        print(userIdsDict)
+    return redirect('/')
 
 
 @app.route('/get-user-id')
 def getuserid():
-  user_id = '-1'
-  try:
-    user_id = userIdsDict[request.remote_addr]
-    print(user_id)
-  except:
-    print('Exception')
-  return user_id
+    user_id = '-1'
+    try:
+        user_id = userIdsDict[request.remote_addr]
+        print(user_id)
+    except:
+        print('Exception')
+    return user_id
 
 
 @app.route('/auth')
 def auth():
-  return render_template('index-guest.html')
+    return render_template('index-guest.html')
 
 
 @app.route('/sign-out')
 def signout():
-  try:
-    userIdsDict[request.remote_addr] = '-1'
-  except:
-    print('Exception')
-  return redirect('/')
+    try:
+        userIdsDict[request.remote_addr] = '-1'
+    except:
+        print('Exception')
+    return redirect('/')
 
 
 @app.route('/for-html-tests')
 def forhtmltests():
-  return render_template('index-guest.html')
+    return render_template('index-guest.html')
 
 
 @app.route('/')
 def index():
-  return render_template('index.html')
+    return render_template('index.html')
 
 
 # def index():
@@ -138,7 +138,7 @@ def index():
 
 @app.route('/about')
 def about():
-  return 'About page'
+    return 'About page'
 
 
 # @app.route('/files-list')
@@ -175,7 +175,9 @@ def about():
 
 @app.route('/edit/<string:localId>/<string:fileName>', methods=['POST', 'GET'])
 def edit(localId, fileName):
-  return render_template('download.html', localId=localId, fileName=fileName)
+    return render_template('download.html', localId=localId, fileName=fileName)
+
+
 # def edit(localId, fileName):
 #   if current_user != dict() and userId != '':
 #     if request.method == 'POST':
@@ -210,20 +212,24 @@ def edit(localId, fileName):
 @app.route('/create')
 @app.route('/get-file-content', methods=['POST', 'GET'])
 def getfilecontent():
-  # data = request.data
-  # dataDict = json.loads(data)
-  # url = dataDict['url']
-  if request.method == 'POST':
-    url = request.form['url']
-    title = request.form['title']
-    send_request = requests.get(url)
-    return render_template('edit.html', content=send_request.content.decode('utf-8'), title=title[:title.rfind('.')])
-  else:
-    return render_template('edit.html', content='', title='Rename me!')
+    # data = request.data
+    # dataDict = json.loads(data)
+    # url = dataDict['url']
+    if request.method == 'POST':
+        url = request.form['url']
+        title = request.form['title']
+        send_request = requests.get(url)
+        return render_template('edit.html', content=send_request.content.decode('utf-8'),
+                               title=title[:title.rfind('.')])
+    else:
+        return render_template('edit.html', content='', title='Rename me!')
+
 
 @app.route('/settings', methods=['POST', 'GET'])
 def settings():
-  return render_template('settings.html')
+    return render_template('settings.html')
+
+
 # def settings():
 #   if current_user != dict() and userId != '':
 #     if request.method == 'POST':
@@ -262,7 +268,7 @@ def settings():
 #       bgColor = db.child(dbPath + 'bgColor').get(current_user['idToken']).val()
 
 #       speed = str(toPercentValue(int(speed)))
-      
+
 #       return render_template('settings.html', bgColor=bgColor, textColor=textColor, textSize=textSize, speed=speed, user_id=userId)
 #   else:
 #     return redirect('/')
@@ -329,14 +335,14 @@ def settings():
 
 @app.route('/get-cropped-avatar', methods=['POST'])
 def getcroppedavatar():
-  avatarFile = request.files['avatarFile']
-  avatarFile.save('static/images/avatar.jpeg')
-  crop()
-  with open('static/images/avatar.jpeg', 'rb') as image:
-    f = image.read()
-    b = bytearray(f)
-  os.remove('static/images/avatar.jpeg')
-  return b
+    avatarFile = request.files['avatarFile']
+    avatarFile.save('static/images/avatar.jpeg')
+    crop()
+    with open('static/images/avatar.jpeg', 'rb') as image:
+        f = image.read()
+        b = bytearray(f)
+    os.remove('static/images/avatar.jpeg')
+    return b
 
 
 @app.route('/profile', methods=['POST', 'GET'])
@@ -363,12 +369,12 @@ def getcroppedavatar():
 #   else:
 #     return redirect('/')
 def profile():
-  return render_template('profile.html')
+    return render_template('profile.html')
 
 
 if __name__ == "__main__":
-  app.run(
-    host='0.0.0.0',
-    port=8080,
-    debug=True
-  )
+    app.run(
+        host='0.0.0.0',
+        port=8080,
+        debug=True
+    )
